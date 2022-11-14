@@ -2,7 +2,6 @@
 
 (let* ((expected-warnings
         '((sb-kernel:redefinition-with-defun . 13)
-          (sb-kernel:redefinition-with-defmethod . 1)
           (uiop/lisp-build:compile-warned-warning . 1)
           (sb-int:type-style-warning . 1)
           (sb-kernel:redefinition-with-defmacro . 32)
