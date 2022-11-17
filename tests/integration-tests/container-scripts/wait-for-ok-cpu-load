@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+while [ "$(nproc)" -lt "$(sed -r '/procs_running/!d;s/.* //;' < /proc/stat)" ]; do
+    sleep 1
+done

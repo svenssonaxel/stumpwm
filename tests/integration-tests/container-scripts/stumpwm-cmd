@@ -1,5 +1,19 @@
 #!/bin/bash
 set -e
 
+wait-for-ok-cpu-load
+
+# Set the stumpwm command result field to a value we know how to compare
+xprop -root -format STUMPWM_COMMAND_RESULT 8u -set STUMPWM_COMMAND_RESULT none
+# Issue the command
 xprop -root -format STUMPWM_COMMAND 8u -set STUMPWM_COMMAND "$*"
-sleep .3
+# Wait for the result
+while [ "$(xprop -root -notype STUMPWM_COMMAND_RESULT)" == 'STUMPWM_COMMAND_RESULT = "none"' ]; do
+    if [ -f fail ]; then exit 1; fi
+    echo "Waiting for command to be executed" >&2
+    sleep .5
+done
+
+# Wait for screen to refresh
+wait-for-ok-cpu-load
+sleep .5

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+wait-for-ok-cpu-load
+
 (
     set +e
     stumpwm > stumpwm.stdout.txt 2> stumpwm.stderr.txt
@@ -10,4 +12,5 @@ set -e
         echo "stumpwm exited with code $ec" >> "fail"
     fi
 ) &
-sleep 1 # Wait for stumpwm to start
+stumpwm-cmd eval nil # Wait for stumpwm to start
+sleep 1 # Wait for screen to refresh

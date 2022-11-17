@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+wait-for-ok-cpu-load
+
 w="$1";shift
 h="$1";shift
 mode="${w}x${h}"
@@ -11,4 +13,7 @@ else
 fi
 xrandr --addmode screen "$mode" 2>/dev/null
 xrandr --output screen --mode "$mode" "$@" 2>/dev/null
-sleep 1
+
+# Wait for screen to refresh
+wait-for-ok-cpu-load
+sleep 2

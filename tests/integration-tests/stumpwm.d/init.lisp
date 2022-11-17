@@ -2,7 +2,7 @@
 (setf *top-level-error-action* :abort)
 
 ;; Configuration
-(setf *timeout-frame-indicator-wait* 60)
+(setf *timeout-frame-indicator-wait* 3600)
 
 ;; Invariant testing
 (load "~/.stumpwm.d/invariants.lisp")

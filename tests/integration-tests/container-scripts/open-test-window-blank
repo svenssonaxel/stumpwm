@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+xclock -d -strftime " " &
+sleep 2

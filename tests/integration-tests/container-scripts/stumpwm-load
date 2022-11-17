@@ -1,7 +1,14 @@
 #!/bin/bash
 set -e
 
+# Save the code to a temporary file
 file=$(mktemp --suffix=.lisp)
 cat > "$file"
-stumpwm-cmd "eval (load \"$file\")"
-rm "$file"
+# Issue the command to load and then delete it
+stumpwm-cmd "eval (progn (load \"$file\") (delete-file \"$file\"))"
+# Wait for the file to be deleted
+while [ -f "$file" ]; do
+    if [ -f fail ]; then exit 1; fi
+    echo "Waiting for code in $file to be executed" >&2
+    sleep .5
+done
