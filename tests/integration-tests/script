@@ -39,10 +39,11 @@ generate-tests() {
     COUNT="$count" make generate-tests
 }
 
+userWORKDIR="$(if [ $(id -u) -eq 0 ]; then echo /root; else echo /home/user; fi)"
 internal-generate-tests() {
     count="$1"
     [ 1 -le "$count" ] || die COUNT must be a positive integer.
-    docker-wrapper "Generating $count tests" run --rm -v "$(pwd)/testcases":/home/user/testcases --init "$(cat test-runner.iid)" generate-tests "$count"
+    docker-wrapper "Generating $count tests" run --rm -v "$(pwd)/testcases:$userWORKDIR/testcases" --init "$(cat test-runner.iid)" generate-tests "$count"
 }
 
 internal-get-run-tests-deps() {
@@ -95,7 +96,7 @@ internal-run-one-test() {
     expectation="$2"
     [ -n "$testname" ] || die NAME must be given.
     [ -e "testcases/$testname.sh" ] || die "testcases/$testname.sh" does not exist.
-    docker-wrapper "Test $testname" run --rm -v "$(pwd)/testcases":/home/user/testcases --init "$(cat test-runner.iid)" run-test "$testname" "$expectation" "$IS_TTY"
+    docker-wrapper "Test $testname" run --rm -v "$(pwd)/testcases:$userWORKDIR/testcases" --init "$(cat test-runner.iid)" run-test "$testname" "$expectation" "$IS_TTY"
 }
 
 clean-results() {

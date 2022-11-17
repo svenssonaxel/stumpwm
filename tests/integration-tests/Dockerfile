@@ -7,20 +7,22 @@ WORKDIR /root
 
 ENV DISPLAY=":7"
 ARG userUID
-RUN useradd -u $userUID -m -s /bin/bash user
+RUN if [ $userUID -ne 0 ]; then useradd -u $userUID -m -s /bin/bash user; fi
 
 COPY tests/integration-tests/container-scripts/install-deps .
 RUN ./install-deps
 
 COPY . stumpwm
+ARG userNAME
+ARG userWORKDIR
 RUN cd stumpwm \
     && mv tests/integration-tests/container-scripts/* /usr/local/bin/ \
-    && mv tests/integration-tests/stumpwm.d /home/user/.stumpwm.d \
-    && chown -R user:user /home/user/.stumpwm.d \
+    && mv tests/integration-tests/stumpwm.d $userWORKDIR/.stumpwm.d \
+    && chown -R $userNAME:$userNAME $userWORKDIR/.stumpwm.d \
     && ./autogen.sh \
     && ./configure \
     && make \
     && make install
 
-USER user
-WORKDIR /home/user
+USER $userNAME
+WORKDIR $userWORKDIR
